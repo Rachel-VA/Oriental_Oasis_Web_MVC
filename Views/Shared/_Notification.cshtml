@@ -1,0 +1,23 @@
+﻿@*Create a partial view to display all notifications, then call its name in the _Layout before render body*@
+@if (TempData["success"] != null)
+{
+	@*Using different notification display style from third party*@
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			toastr.success('@TempData["success"]');
+		});
+	</script>
+}
+
+@if (TempData["error"] != null)
+{
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			toastr.error('@TempData["error"]');
+		});
+	</script>
+}

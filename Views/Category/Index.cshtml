@@ -1,0 +1,78 @@
+﻿@*Define a view model, must be lower case*@
+@model List<Category>
+@*call the partial view*@
+<partial name="_Notification"/>
+
+<div class=" card shadow border-0 mt-4">
+	<div class="card-header bg-secondary bg-gradient m-lg-0 py-3">
+		<div class="row">
+			<div class="col-12 text-center">
+				<h2 class="text-white py-2"> Category List</h2>
+			</div>
+		</div>
+	</div>
+
+	<div class="card-body py-4">
+
+		<div class="container">
+			<div class="row pd-3">
+				<div class="col-6">
+					
+				</div>
+				<div class="col-6 text-end">
+					@*call the new view Create which is created in Category Controller file*@
+					<a asp-controller="Category" asp-action="Create" class="btn btn-primary">
+						 New  <i class="bi bi-plus-square"></i>
+					</a>
+				</div>
+
+
+			</div>
+
+			@*Create a table to retrieve dat from the database and display in the Category view tab*@
+			<table class="table table-bordered table-striped">
+				<thead>
+					<tr>
+						@*row*@
+						<th>
+							@*heading*@
+							Catergory Name
+						</th>
+						<th>
+							Order Quantity
+						</th>
+						<th></th>
+					</tr>
+				</thead>
+
+				<tbody>
+					@*create a loop to display the categories created in the databse*@
+					@foreach (var obj in Model.OrderBy(u => u.DisplayOrder))
+					{
+						<tr>
+							<td>@obj.Name</td>
+							<td>
+								@obj.DisplayOrder
+							</td>
+							<td>
+								@*create a delete category button*@
+								<div class="w-75 btn-group" role="group">
+									<a asp-controller="Category" asp-action="Edit" asp-route-id="@obj.Cat_Id" class="btn btn-primary mx-2">
+										<i class="bi bi-pencil-fill">Edit</i>
+									</a>
+									@*create a delete cat button*@
+									<a asp-controller="Category" asp-action="Delete" asp-route-id="@obj.Cat_Id" class="btn btn-danger mx-2">
+										<i class="bi bi-trash2-fill">Delete</i>
+									</a>
+								</div>
+							</td>
+						</tr>
+
+					}
+
+				</tbody>
+			</table>
+
+		</div>
+	</div>
+</div>
