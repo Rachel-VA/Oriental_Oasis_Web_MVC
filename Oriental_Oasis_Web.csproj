@@ -16,4 +16,13 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
   </ItemGroup>
 
+	<ItemGroup>
+		<ProjectReference Include="..\OrientalOasis.DataAccess\OrientalOasis.DataAccess.csproj" />
+		<ProjectReference Include="..\OrientalOasis.Model\OrientalOasis.Model.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="wwwroot\IMGs\imgproduct\" />
+	</ItemGroup>
+
 </Project>

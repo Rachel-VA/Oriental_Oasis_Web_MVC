@@ -1,0 +1,73 @@
+﻿@model List<Product>
+@* Call the partial view *@
+
+
+<style>
+    .table-img {
+        max-width: 100px;
+        max-height: 100px;
+        width: auto;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+    }
+
+    .btn-group {
+        display: flex;
+        justify-content: center;
+        
+       
+    }
+
+    .btn-group .btn {
+        flex: 1;
+    }
+
+    .btn-custom {
+        font-size: 12px; /* Adjust the size as needed */
+        padding: 5px 10px; /* Adjust padding if necessary */
+    }
+</style>
+
+
+<div class="card shadow border-0 my-4">
+    <div class="card-header bg-secondary bg-gradient m-lg-0 py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="text-white py-2">Product Categories</h2>
+            </div>
+        </div>
+    </div>
+    <div class="card-body py-4">
+        <div class="container">
+            <div class="row pd-3">
+                <div class="col-6"></div>
+                <div class="col-6 text-end">
+                    @* Call the new view Create which is created in Product Controller file *@
+                    <a asp-controller="Product" asp-action="UpSert" class="btn btn-primary">
+                        Create New Product <i class="bi bi-plus-square"></i>
+                    </a>
+                </div>
+            </div>
+            @* Create a table to retrieve data from the database and display in the Product view tab *@
+            <table id="myTable" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Item Number</th>
+                        <th>Price</th>
+                        <th>Origin</th>
+                        <th>Category</th>
+                        <th>Description</th>
+                        <th>Image</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/product.js"></script>
+}

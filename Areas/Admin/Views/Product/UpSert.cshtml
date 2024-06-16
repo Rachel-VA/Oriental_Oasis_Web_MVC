@@ -1,0 +1,129 @@
+﻿@model ProductVM
+
+<div class="card shadow border-0 my-4">
+    <div class="card-header bg-secondary bg-gradient m-lg-0 py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="text-white py-2">@((Model.Product.ProductId != 0) ? "Update" : "Create") Product</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body py-4">
+        <form method="post" class="row" enctype="multipart/form-data">
+            <input asp-for="Product.ProductId" hidden />
+            <input asp-for="Product.ImageURL" hidden />
+            <div class="row">
+                <div class="col-10">
+                    <div class="border p-3">
+                        <div class="form-floating py-2 col-12">
+                            <input asp-for="Product.ItemName" class="form-control border-0 shadow" />
+                            <label asp-for="Product.ItemName" class="ms-2"></label>
+                            <span asp-validation-for="Product.ItemName" class="text-danger"></span>
+                        </div>
+
+                        <div class="py-2 col-12">
+                            <label asp-for="Product.Description" class="ms-2 text-muted"></label>
+                            <textarea asp-for="Product.Description" class="form-control border-0 shadow"></textarea>
+                            <span asp-validation-for="Product.Description" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-floating py-2 col-12">
+                            <input asp-for="Product.ItemNumber" class="form-control border-0 shadow" />
+                            <label asp-for="Product.ItemNumber" class="ms-2"></label>
+                            <span asp-validation-for="Product.ItemNumber" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-floating py-2 col-12">
+                            <input asp-for="Product.Origin" class="form-control border-0 shadow" />
+                            <label asp-for="Product.Origin" class="ms-2"></label>
+                            <span asp-validation-for="Product.Origin" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-floating py-2 col-12">
+                            <input asp-for="Product.ListPrice" class="form-control border-0 shadow" />
+                            <label asp-for="Product.ListPrice" class="ms-2"></label>
+                            <span asp-validation-for="Product.ListPrice" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-floating py-2 col-12">
+                            <input asp-for="Product.Price" class="form-control border-0 shadow" />
+                            <label asp-for="Product.Price" class="ms-2"></label>
+                            <span asp-validation-for="Product.Price" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-floating py-2 col-12">
+                            <input asp-for="Product.Price50" class="form-control border-0 shadow" />
+                            <label asp-for="Product.Price50" class="ms-2"></label>
+                            <span asp-validation-for="Product.Price50" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-floating py-2 col-12">
+                            <input asp-for="Product.Price100" class="form-control border-0 shadow" />
+                            <label asp-for="Product.Price100" class="ms-2"></label>
+                            <span asp-validation-for="Product.Price100" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-floating py-2 col-12">
+                            <select asp-for="Product.Cat_Id" asp-items="@Model.CategoryList" class="form-select border-0 shadow">
+                                <option disabled selected>** Select A Category ID **</option>
+                            </select>
+                            <label asp-for="Product.Cat_Id" class="ms-2"></label>
+                            <span asp-validation-for="Product.Cat_Id" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-floating py-2 col-12">
+                            <input type="file" name="file" class="form-control border-0 shadow" />
+                            <label asp-for="Product.ImageURL" class="ms-2"></label>
+                        </div>
+
+                        <div class="row pt-2">
+                            <div class="col-6 col-md-3">
+                                <button type="submit" class="btn btn-primary form-check-control" style="width:200px">
+                                    @((Model.Product.ProductId != 0) ? "Update" : "Create")
+                                </button>
+                            </div>
+
+                            <div class="col-6 col-md-3">
+                                <a asp-controller="Product" asp-action="Index" class="btn btn-outline-primary form-control" style="width:200px">
+                                    Back to List
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-2">
+                    @if (!string.IsNullOrEmpty(Model.Product.ImageURL))
+                    {
+                        <img src="@Model.Product.ImageURL" width="100%" style="border-radius:5px; border:1px solid pink" />
+                    }
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+
+@* the script code below is for creating a text area for the description of product using TinyMCE which serve as a mini word editor*@
+@*Validate client side using the validationScriptionPartial provided by the framework*@
+@section Scripts {
+	
+	<script>
+		tinymce.init({
+			selector: 'textarea',
+			plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker tinymcespellchecker permanentpen powerpaste advtable advcode editimage advtemplate ai mentions tinycomments tableofcontents footnotes mergetags autocorrect typography inlinecss markdown',
+			toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+			tinycomments_mode: 'embedded',
+			tinycomments_author: 'Author name',
+			mergetags_list: [
+				{ value: 'First.Name', title: 'First Name' },
+				{ value: 'Email', title: 'Email' },
+			],
+			ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
+		});
+	</script>
+	<partial name="_ValidationScriptsPartial" />
+}

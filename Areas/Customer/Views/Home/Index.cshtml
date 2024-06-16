@@ -1,0 +1,51 @@
+﻿@model IEnumerable<Product>
+
+<div class="container mt-4">
+    <div class="text-center mb-4">
+        <h1 class="display-3" style="color: black; font-weight: bold;">Welcome to Oriental Oasis</h1>
+        <p class="lead" style="color: black;">Discover our exquisite collection of Asian decor and art pieces, curated to bring the beauty and elegance of Asia into your home.</p>
+        <p class="text-muted" style="color: black;">At Oriental Oasis, we offer a diverse range of products from ceramics to paintings, sculptures, and more. Each piece is carefully selected to ensure quality and authenticity, allowing you to create a serene and stylish space. Explore our collection and find the perfect addition to your home decor.</p>
+    </div>
+
+
+
+<div class="row pd-3">
+    @foreach (var Product in Model)
+    {
+        <div class="col-lg-3 col-sm-6">
+            <div class="row p-2">
+                <div class="col-12 p-1">
+                    <!-- Content for each product -->
+                    <div class="card border-0 p-3 shadow-top border-5 rounded">
+                        <img src="@Product.ImageURL" class="card-img-top rounded"/>
+                    <div class="card-body pd-0">
+                        <div class="pl-1">
+                            <p class="card-title h5 text-dark opacity-75 text-uppercase text-center">@Product.ItemName</p>
+                                <p class="card-title text-warning text-center">Product Number: <b>@Product.ItemNumber</b></p>
+                        </div>
+                        <div class="pl-1">
+                            <p class="text-dark text-opacity-75 text-center">List Price: <span class="text-decoration-line-through">@Product.ListPrice.ToString("c")</span></p>
+                        </div>                           
+
+                            <div class="pl-1">
+                                <p class="text-dark text-opacity-75 text-center">Price: <span>@Product.Price100.ToString("c")</span></p>
+                            </div>
+                    </div>
+
+                    <div>
+
+                            <a asp-action="Details" 
+                            asp-route-ProductId="@Product.ProductId"
+                            class=" btn  border-0 form-control" style="background-color:black; color: yellow;display: block; text-align: center; padding: 10px; border-radius: 5px;">
+                            Details
+                        </a>
+                    </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

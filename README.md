@@ -97,12 +97,70 @@ To avoid SSL certificate warnings when running your application locally, you nee
 - Then ran the command 'update-database' to update the database to see changes
 - To see the changes, go to database, right click on bdo.Category table
 
-### Get all Categories
-### Hot Reload
-### Display Categories
-### Bootswatch Theme and Bootstrap Icons
-### Design Category List Page
-### Create Category UI
-### Project Reference issues
+### Category CRUD operation is almost done
 
-### Repository Pattern
+### Repository Pattern for database
+- Create lib classes as new projects: OrientalOasis.DataAccess, OrientalOasis.Model, and OrientalOasis.Utilities
+- Move Data and Migration folders into .DataAccess project, move Models folder into .Model, create a new class inside .Utilities project to store static data  
+
+### Reset database
+- Delete the database in SQL studio management
+- In the project, delete the Migration folder
+- Open Tools - NuGets manager console, select OreientalOasis.DataAccess, then using command: Add - migration AddCategoryToDbAndSeedTable
+- Then update the database to push to updated data using : update - database
+
+- ### Seperate the web in Areas
+- on the project, right click to create a new Scaffolded Item and create an Area MVC Admin
+- The Framework will auto generate a folder Admin with code files in it
+- Copy the {area:exists} and past it in program.cs and name it customer to make it invoke default for customer interface
+- Move CategoryController.cs file into Admin controller
+- Move HomeController.cs to Customer controller
+- Define asp-area views in _Layout.cshtml file for it to know where to find the controller_
+
+### product CRUD operations
+#### Create product model
+- Create product item list and pupulate it
+- Open NuGet Manager console and : add-migration addProductsToDb (make sure to select the .DataAcess)
+- Run: update-database
+
+#### List of features in Product CRUD operations
+- Create Product model
+- Seed products 
+- Create foreign keys
+- Handle IMGs both in database & on view
+- Create View model
+- File I/O
+- UpSert: Combine, create, edit pages
+- Rich Text
+- Create product
+
+- Loading Nav
+#### Datatable API
+- Using DataTable Plugin API
+- Go to datatable.net
+- copy .css file add it to _Layout.cshtml
+- copy .js file to _Layout.cshtml in the bottom
+- Create API call in the end of ProductController.cs file
+- nav to js folder and create a new item product.js
+- create a document method to load the table
+- copy the Ajax datatable and pasted it in product.js
+- from datatable.net/data, copy the column code
+- Database column
+- Edit product link in dataTable
+- Delete product
+- sweet alert
+
+#### Home Page
+- Display products on Home Page
+- Details action func
+- Detail Page
+
+
+### Next Features
+- Company CRUD operations
+- Shopping Cart
+- User register
+
+#### Later
+- Order management
+- Deployment
