@@ -2,9 +2,12 @@
 using OrientalOasis.Model;
 using System.Diagnostics;
 using OrientalOasis.DataAccess.Data;
+using OrientalOasis.Utilities;
 //using OrientalOasis.DataAccess.Repository.IRepository;
 using Microsoft.Extensions.Logging;
 using OrientalOasis.DataAccess.Repository.IRepository;
+using Microsoft.AspNetCore.Authorization;
+//using OrientalOasis.Utilities;
 //using OrientalOasis.DataAcess.Repository.IRepository; // This is important
 
 
@@ -12,6 +15,7 @@ namespace Oriental_Oasis_Web.Areas.Admin.Controllers
 {
     //using attribute Area to define specific Area for the controller
     [Area("Admin")]
+   // [Authorize(Roles = StaticDetails.Role_Admin)]
 
     public class CategoryController : Controller
     {

@@ -1,6 +1,10 @@
+using System;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OrientalOasis.DataAccess.Repository.IRepository;
 using OrientalOasis.Model; // Corrected namespace // Updated namespace
+using System.Security.Claims;
 
 //using OrientalOasis.Model.Models;
 using System.Diagnostics;
@@ -30,10 +34,55 @@ namespace Oriental_Oasis_Web.Areas.Customer.Controllers
         //handle logic for Detail Page
         public IActionResult Details(int ProductId)
         {
-            Product Product = _unitOfWork.Product.Get(u=>u.ProductId==ProductId,includeProperties: "Category");
-            return View(Product);
+            //create a shoppingcart object
+            ShoppingCart cart = new()
+            {
+              Product = _unitOfWork.Product.Get(u=>u.ProductId==ProductId,includeProperties: "Category"),
+              Count=1,
+              ProductId=ProductId,
+            };
+
+            
+            return View(cart);
         }
 
+        //handle logic for adding a tem to shoppingcart
+        [HttpPost]
+        [Authorize] //log in 1st
+        public IActionResult Details(ShoppingCart shoppingCart)
+        {
+            //get user id
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId  = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            shoppingCart.ApplicationUserId = userId;
+
+            ShoppingCart cartFromDb = _unitOfWork.ShoppingCart.Get(u=>u.ApplicationUserId == userId &&
+            
+            u.ProductId==shoppingCart.ProductId);
+
+            if (cartFromDb != null)
+            {
+                // shopping cart exist
+                cartFromDb.Count += shoppingCart.Count;
+                _unitOfWork.ShoppingCart.Update(cartFromDb);
+
+            }
+            else
+            {
+                //add cart record
+                _unitOfWork.ShoppingCart.Add(shoppingCart);
+
+            }
+            TempData["success"] = " Your Shopping cart is sucessfully updated";
+
+
+
+
+            _unitOfWork.ShoppingCart.Add(shoppingCart);
+            _unitOfWork.Save();
+
+            return RedirectToAction(nameof(Index));
+        }
 
         public IActionResult Privacy()
         {

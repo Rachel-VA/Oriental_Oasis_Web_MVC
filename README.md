@@ -123,7 +123,7 @@ To avoid SSL certificate warnings when running your application locally, you nee
 - Open NuGet Manager console and : add-migration addProductsToDb (make sure to select the .DataAcess)
 - Run: update-database
 
-#### List of features in Product CRUD operations
+#### Part 2: List of features in Product CRUD operations
 - Create Product model
 - Seed products 
 - Create foreign keys
@@ -156,11 +156,77 @@ To avoid SSL certificate warnings when running your application locally, you nee
 - Detail Page
 
 
-### Next Features
-- Company CRUD operations
-- Shopping Cart
-- User register
+### Part 3:  Features
+- Using Identity.EntityFramework for register/login
+- Ensure to install 'Microsoft.AspNetCore.Identity.EntityFrameworkCore' package for both the main project and the sub-project .DataAccess
+- Ensure the 'app.UseAuthentication();' is called before the 'app.UseAuthorization();' in program.cs
+- The framework will auto generate a new ApplicationDbContext, remove it and pass in the ItentityUser in ApplicationDbContext
+- Check all the changes after in the project after the Scaffolder Identity sucessfully configured
+- In appsettings.json, remove the new generated ApplicationDbContext server
+- Check the Area folder and delete the generated data folder. Keep the 'pages' folder. It contains all the new files (razor views) for Idenity (register, login, validations)
+- Register the Razor view pages and add in routing pipline in program.cs for the pages to be seen
+#### Create identity Table
+- Open tools-NuGet management console and add migration "add-migration addIdentityTables" to create table in database to store user info
+- Run update-database
+#### Extend user identity (add more columns in database to store more user info)
+- Create a new class inside .Model sub-project and named it ApplicationUser
+- change it to public and inherent IdentityUser
+- Create user data to be added in ApplicationDbContext to generate new columns in database
+- Inside ApplicationDbContext declare a new DbSet
+- Open tools NuGet console to add-migration ExtendIdentityUser, then update-database
 
-#### Later
+#### Register User
+- Open the Register.cshtml.cs file and change IdentityUser to ApplicationUser to enherit user register info into database and encrypt users pw
+
+#### Create roles in database
+- In program.cs, replace AddUseridentityDefault to AddIdentity and add in IdentityRole
+- Declare using RoleManager and inject the rolemanager
+- Open the statis file inside the sub-project Ultilities and create constants
+- In Register.cshtml.cs, create roles:
+- In the OnGetAsyn method populate the user data created in ApplicationUser
+- In the sub-project .Ultilities, create a new class EmailSender and impletement code to handle the user email send to database
+- In the EmailSender file, install .Identity.UI.Services, and impletement interface for IEmailSender
+- Register the Email services in program.cs, makure add the using directive statement
+
+#### Assign Roles in Register to allow user to select a role
+- Create a dropdown to allow user select a role in Register.cshtml.cs
+- Impletement log for List Role in Register.cshtml.cs
+- Add a dropdown view in Register.cshtml to display the List role
+- Impletement  the logic to select a single role at a time in Register.cshtml.cs
+- Add in the AddDefaultTokenProviders() in program.cs
+
+
+
+### Company CRUD operations
+- Create new controller and model for company operation
+- Use same format with Product CRUD
+- Create a new class company model in .Model
+- Create a DbSet companies in ApplicationDbContext
+- Add migration addCommpanyTable and update database
+- Add in a dropdown company selection
+- Restrict user roles to see the company selection, unless user is company
+
+
+### Shopping Cart
+- Create a new model Shopping cart in .Model sub-project
+- Define Product foreign keys and table 
+- Create DbSet in Db application and add migration and update database
+- enable auto tracking update to database to false
+
+### Shopping cart UI
+- create shopping cart controller and index page
+- create a a Shoppingcart view model in Viewmodel
+
+### Order Info
+- Create 2 models class inside .Model for orderHeader and Detail, define properties and create DbSet in database, add migration and update database
+- Create Repo and IRepo patterns and IUnitOfWork and UnitOfWork
+- Create the view for the order detail and shipping info and access the properties inside OrderHeader and OrderDetail
+#### Payment handling
+- Create constants in StaticDetails file
+- create Http post method for Summary and bind the view model ShoppingCartVM
+
+- 
+#### Final part: 
 - Order management
+- Styling
 - Deployment

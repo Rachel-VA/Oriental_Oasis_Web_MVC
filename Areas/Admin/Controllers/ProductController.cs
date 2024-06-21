@@ -10,10 +10,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Authorization;
+using OrientalOasis.Utilities;
 
 namespace Oriental_Oasis_Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    //[Authorize(Roles = StaticDetails.Role_Admin)]
     public class ProductController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
