@@ -78,10 +78,9 @@ namespace Oriental_Oasis_Web.Areas.Customer.Controllers
                 ShoppingCartVM.OrderHeader.State = ShoppingCartVM.OrderHeader.ApplicationUser.State;
                 ShoppingCartVM.OrderHeader.PostalCode = ShoppingCartVM.OrderHeader.ApplicationUser.PostalCode;
                 ShoppingCartVM.OrderHeader.PhoneNumber = ShoppingCartVM.OrderHeader.ApplicationUser.PhoneNumber;
-            }
-           
+                ShoppingCartVM.OrderHeader.Email = ShoppingCartVM.OrderHeader.ApplicationUser.Email;
 
-
+            }          
             //calculate the total in shopping cart
             foreach (var cart in ShoppingCartVM.ShoppingCartList)
             {
@@ -110,7 +109,8 @@ namespace Oriental_Oasis_Web.Areas.Customer.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            ShoppingCartVM.ShoppingCartList = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == userId, includeProperties: "Product");
+            
+           ShoppingCartVM.ShoppingCartList = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == userId, includeProperties: "Product");
 
             var applicationUser = _unitOfWork.ApplicationUser.Get(u => u.Id == userId);
             if (applicationUser == null)
@@ -118,6 +118,13 @@ namespace Oriental_Oasis_Web.Areas.Customer.Controllers
                 // Handle the case where applicationUser is null
                 return RedirectToAction("Index", "Home");
             }
+
+
+            // Set the email from ApplicationUser
+            ShoppingCartVM.OrderHeader.ApplicationUserId = userId;
+            ShoppingCartVM.OrderHeader.OrderDate = DateTime.Now;
+            ShoppingCartVM.OrderHeader.Email = applicationUser.Email; // Ensure this line correctly uses the instantiated applicationUser
+
 
             // Calculate the total in shopping cart
             foreach (var cart in ShoppingCartVM.ShoppingCartList)
@@ -223,17 +230,18 @@ namespace Oriental_Oasis_Web.Areas.Customer.Controllers
                             _unitOfWork.OrderHeader.UpdateStatus(id, StaticDetails.StatusApproved, StaticDetails.PaymentStatusApproved);
                             _unitOfWork.Save();
                         }
+                        HttpContext.Session.Clear();
                     }
                     catch (StripeException ex)
                     {
-                        // Log the exception and handle it accordingly
+                        // Log the exception 
                         Console.WriteLine($"Stripe error: {ex.Message}");
-                        // You can add additional handling here, such as returning an error view
+                        
                     }
                 }
                 else
                 {
-                    // Handle the case where SessionId is null or empty
+                    // case where SessionId is null or empty
                     Console.WriteLine("Order session ID is null or empty.");
                 }
             }
@@ -254,44 +262,68 @@ namespace Oriental_Oasis_Web.Areas.Customer.Controllers
         public IActionResult Plus(int cartId)
         {
             var cartFromDb = _unitOfWork.ShoppingCart.Get(u => u.Id == cartId);
-            cartFromDb.Count += 1;
-            _unitOfWork.ShoppingCart.Update(cartFromDb);
-            _unitOfWork.Save();
+
+            if (cartFromDb != null)
+            {
+                cartFromDb.Count += 1;
+                _unitOfWork.ShoppingCart.Update(cartFromDb);
+                _unitOfWork.Save();
+
+                var userId = cartFromDb.ApplicationUserId;
+                HttpContext.Session.SetInt32(StaticDetails.SessionShCart,
+                    _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == userId).ToList().Sum(c => c.Count));
+            }
+
             return RedirectToAction(nameof(Index));
-
-
         }
+
 
         //decreate method
         public IActionResult Minus(int cartId)
         {
-            var cartFromDb = _unitOfWork.ShoppingCart.Get(u => u.Id == cartId);
-            if (cartFromDb.Count <= 1)
+            var cartFromDb = _unitOfWork.ShoppingCart.Get(u => u.Id == cartId, tracked: true);
+            if (cartFromDb != null)
             {
-                //remove item from cart
-                _unitOfWork.ShoppingCart.Delete(cartFromDb);
+                var userId = cartFromDb.ApplicationUserId;
 
-            }
-            else
-            {
-                cartFromDb.Count -= 1;
-                _unitOfWork.ShoppingCart.Update(cartFromDb);
+                if (cartFromDb.Count <= 1)
+                {
+                    //remove item from cart
+                    _unitOfWork.ShoppingCart.Delete(cartFromDb);
+                }
+                else
+                {
+                    cartFromDb.Count -= 1;
+                    _unitOfWork.ShoppingCart.Update(cartFromDb);
+                }
+
+                _unitOfWork.Save();
+
+                HttpContext.Session.SetInt32(StaticDetails.SessionShCart,
+                    _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == userId).ToList().Sum(c => c.Count));
             }
 
-            _unitOfWork.Save();
             return RedirectToAction(nameof(Index));
         }
+
 
 
 
         //Delete method
         public IActionResult Delete(int cartId)
         {
-            var cartFromDb = _unitOfWork.ShoppingCart.Get(u => u.Id == cartId);
+            var cartFromDb = _unitOfWork.ShoppingCart.Get(u => u.Id == cartId, tracked: true);
 
-            //remove item from cart
-            _unitOfWork.ShoppingCart.Delete(cartFromDb);          
-            _unitOfWork.Save();
+            if (cartFromDb != null)
+            {
+                var userId = cartFromDb.ApplicationUserId;
+                _unitOfWork.ShoppingCart.Delete(cartFromDb);
+                _unitOfWork.Save();
+
+                HttpContext.Session.SetInt32(StaticDetails.SessionShCart,
+                    _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == userId).ToList().Sum(c => c.Count));
+            }
+
             return RedirectToAction(nameof(Index));
         }
 

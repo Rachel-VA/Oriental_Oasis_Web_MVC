@@ -1,4 +1,8 @@
-﻿@using OrientalOasis.Utilities
+﻿@*confiure for accessing session in shopping cart*@
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+@using OrientalOasis.Utilities
 
 <!DOCTYPE html>
 <html lang="en">
@@ -15,25 +19,41 @@
 
     <!-- SweetAlert2 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
-   
-    
+
     <style>
         /* Custom styles for navbar and footer */
         .navbar {
             background-color: #000 !important; /* Set navbar background to black */
+            padding: 20px;
         }
 
             .navbar .navbar-brand, .navbar .nav-link, .navbar .dropdown-item {
                 color: #ffc107 !important; /* Set navbar text to yellow */
+                font-size: 1em;
             }
 
                 .navbar .nav-link:hover, .navbar .dropdown-item:hover {
                     color: #fff !important; /* Optional: Set hover text to white */
                 }
 
+        .bi-cart {
+            font-size: 1em;
+        }
+
+        .navbar-brand,
+        .nav-link {
+            font-size: 1.2em; 
+        }
+
+
         .footer {
             background-color: #000 !important; /* Set footer background to black */
             color: #ffc107 !important; /* Set footer text to yellow */
+            padding: 15px 0; /* Add padding to top and bottom of footer */
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            clear: both;
         }
 
             .footer a {
@@ -41,37 +61,57 @@
             }
 
                 .footer a:hover {
-                    color: #fff !important; /* Optional: Set hover link text to white */
+                    color: #fff !important; /* Set hover link text to white */
                 }
-    </style>
 
-   
+        .content {
+            min-height: calc(100vh - 60px); /* Adjust this value based on your header and footer height */
+            margin-bottom: 60px; /* Add bottom margin equal to the footer height */
+        }
+    </style>
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-primary suttle border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-lg navbar-toggleable-sm navbar-dark  border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Oriental Oasis</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/IMGs/logoDragons.png" style="width:30px" /> Oriental Oasis
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link " asp-controller="Home" asp-action="Index">Home</a>
+                        <li class="nav-item">
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    if (User.IsInRole(StaticDetails.Role_Admin) || User.IsInRole(StaticDetails.Role_Employee))
+                                    {
+                                    <a class="nav-link" asp-area="Admin" asp-controller="Home" asp-action="Index">Home</a>
+                                    }
+                                    else
+                                    {
+                                    <a class="nav-link" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+                                    }
+                                }
+                                else
+                                {
+                                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                                }
                         </li>
 
- @*Retrsict customer user to see the content management dropdown menu*@ 
-                    @*    @if (User.IsInRole(StaticDetails.Role_Admin))*@
-                        {
+                            
 
-                            <li class="nav-item">
-                                <a class="nav-link " asp-area="Customer" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                            </li>
+
+                            @*Retrsict customer user to see the content management dropdown menu*@
+                            @if (User.IsInRole(StaticDetails.Role_Admin))
+                            {
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Content Management
+                                    Management Dashboard
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li class="nav-item">
@@ -85,37 +125,74 @@
                                     <li class="nav-item">
                                         <a class="nav-link" asp-area="Admin" asp-controller="Company" asp-action="Index">Company</a>
                                     </li>
+
+                                    <li class="nav-item">
+                                        <a class="nav-link " asp-area="Admin" asp-controller="Order" asp-action="Index">Order Management</a>
+                                    </li>
+                                        @*restrict user from select roles, this tab only visible if user is admin*@
                                     <li><hr class="dropdown-divider"></li>
-
-
+                                    <li class="nav-item">
+                                        <a class="nav-link " asp-area="Identity" asp-page="/Account/Register">Register User</a>
+                                    </li>
                                 </ul>
                             </li>
-                       @* }*@
+                            }
 
                         <li class="nav-item">
-                            <a class="nav-link " asp-area="Customer" asp-controller="ShCart" asp-action="Index">
-                                <i class =" bi bi-cart"></i> &nbsp;
-
-                            </a>
+                            <a class="nav-link" asp-area="Customer" asp-controller="Home" asp-action="About">About</a>
                         </li>
-                        
+                            @*Privacy tab*@
 
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="Customer" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+
+
+                            @* Order History for Customer/Company *@
+                            @if (User.IsInRole(StaticDetails.Role_Customer) || User.IsInRole(StaticDetails.Role_Company))
+                            {
+                            <li class="nav-item">
+                                <a class="nav-link " asp-area="Customer" asp-controller="CustomerOrderHistory" asp-action="CustomerOrderHistory">Order History</a>
+                            </li>
+                            }
+
+                            @if (HttpContextAccessor.HttpContext.Session.GetInt32(StaticDetails.SessionShCart) != null)
+                            {
+                            <li class="nav-item">
+                                <a class="nav-link " asp-area="Customer" asp-controller="ShCart" asp-action="Index">
+                                    <i class=" bi bi-cart"></i> &nbsp;
+                                    (@HttpContextAccessor.HttpContext.Session.GetInt32(StaticDetails.SessionShCart))
+                                </a>
+                            </li>
+                            }
+                            else
+                            {
+                            <li class="nav-item">
+                                <a class="nav-link " asp-area="Customer" asp-controller="ShCart" asp-action="Index">
+                                    <i class=" bi bi-cart"></i> &nbsp;
+                                    (0)
+                                </a>
+                            </li>
+                            }
                     </ul>
                     <partial name="_LoginPartial" />
-
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
+    <div class="container content">
         <main role="main" class="pb-3">
-            <partial name="_Notification" />
-            @RenderBody()
+            
+            
+                <partial name="_Notification" />
+                @RenderBody()
+            
+            
         </main>
     </div>
 
     <footer class="border-top footer bg-primary text-muted">
-        <div class="container">
+        <div class="container footer-container">
             Created By Rachael Savage <i class="bi bi-emoji-heart-eyes"></i>
         </div>
     </footer>

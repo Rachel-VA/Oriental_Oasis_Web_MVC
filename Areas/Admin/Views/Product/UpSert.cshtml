@@ -1,10 +1,10 @@
 ﻿@model ProductVM
 
 <div class="card shadow border-0 my-4">
-    <div class="card-header bg-secondary bg-gradient m-lg-0 py-3">
+    <div class="card-header m-lg-0 py-3" style="background-color:black;">
         <div class="row">
             <div class="col-12 text-center">
-                <h2 class="text-white py-2">@((Model.Product.ProductId != 0) ? "Update" : "Create") Product</h2>
+                <h2 class="py-2" style="color:#ffc107;">@((Model.Product.ProductId != 0) ? "Update" : "Create") Product</h2>
             </div>
         </div>
     </div>

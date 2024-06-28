@@ -39,6 +39,15 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 });
 
+//configure session for shoppingcart to show items added to it
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(100);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+
+});
 
 //register for razor view pages which auto generated after identity configured
 builder.Services.AddRazorPages();
@@ -69,6 +78,11 @@ app.UseRouting();
 app.UseAuthentication();//check user sign in info is valid
 //app.UseAuthorization();
 app.UseAuthorization(); // Checks if the user is authorized to access the resources
+
+//
+app.UseSession();
+
+
 app.MapRazorPages(); //add the Razor map in routing
 app.MapControllerRoute(
     name: "default",

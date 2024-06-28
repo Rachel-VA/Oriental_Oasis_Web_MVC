@@ -1,0 +1,91 @@
+﻿@{
+    var status = Context.Request.Query["status"];
+    var pending = "text-primary";
+    var inprocess = "text-primary";
+    var completed = "text-primary";
+    var approved = "text-primary";
+    var all = "text-primary";
+
+    switch (status)
+    {
+        case "pending":
+            pending = "active text-white bg-primary";
+            break;
+
+        case "inprocess":
+            inprocess = "active text-white bg-primary";
+            break;
+
+        case "completed":
+            completed = "active text-white bg-primary";
+            break;
+
+        case "approved":
+            approved = "active text-white bg-primary";
+            break;
+
+        default:
+            all = "active text-white bg-primary";
+            break;
+    }
+}
+
+@{
+    ViewData["Title"] = "Customer Order History";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Customer Order History</h1>
+
+<div class="card shadow border-0 my-4">
+    <div class="card-header bg-secondary bg-gradient m-lg-0 py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="text-white py-2">Order History</h2>
+            </div>
+        </div>
+    </div>
+    <div class="card-body py-4">
+        <div class="d-flex justify-content-between pd-5 pt-2">
+            <span></span>
+            <ul class="list-group list-group-horizontal-sm">
+                <a style="text-decoration:none;" asp-controller="CustomerOrderHistory" asp-action="CustomerOrderHistory" asp-route-status="inprocess">
+                <li class="list-group-item @inprocess">In process</li>
+                </a>
+                <a style="text-decoration:none;" asp-controller="CustomerOrderHistory" asp-action="CustomerOrderHistory" asp-route-status="pending">
+                <li class="list-group-item @pending">Payment Pending</li>
+                </a>
+                <a style="text-decoration:none;" asp-controller="CustomerOrderHistory" asp-action="CustomerOrderHistory" asp-route-status="completed">
+                <li class="list-group-item @completed">Completed</li>
+                </a>
+                <a style="text-decoration:none;" asp-controller="CustomerOrderHistory" asp-action="CustomerOrderHistory" asp-route-status="approved">
+                <li class="list-group-item @approved">Approved</li>
+                </a>
+                <a style="text-decoration:none;" asp-controller="CustomerOrderHistory" asp-action="CustomerOrderHistory" asp-route-status="all">
+                <li class="list-group-item @all">All</li>
+                </a>
+            </ul>
+        </div>
+
+        <table id="myTable" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>Phone Number</th>
+                    <th>Status</th>
+                    <th>Total</th>
+                    <th>Email</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/customerorder.js"></script>
+}

@@ -30,7 +30,7 @@ function loadDataTable() {
                 "render": function (data) {
                     return `
                         <div class="text-center" style="display: flex; flex-direction: column; align-items: center; gap: 2px;">
-                            <a href="/Admin/Product/UpSert/${data}" class="btn btn-success text-white" style="cursor:pointer; width:80px; font-size:12px; padding:5px;margin-top:10px;">
+                            <a href="/Admin/Product/UpSert/${data}" class="btn btn-success text-yellow" style="cursor:pointer; width:80px; font-size:12px; padding:5px;margin-top:10px;">
                                 Edit
                             </a>
                             <a onClick="Delete('/Admin/Product/Delete/${data}')" class="btn btn-danger mx-2" style="cursor:pointer; width:80px; font-size:12px; padding:5px;margin-top:10px;">

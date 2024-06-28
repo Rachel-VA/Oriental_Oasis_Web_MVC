@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Areas\Customer\Views\Home\CustomerOrderHistory.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="appsettings.Production.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.6" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.6" />
@@ -26,10 +34,18 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Content Update="Areas\Customer\Views\CustomerOrderHistory\Details.cshtml">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
 	  <Content Update="Areas\Identity\Pages\Account\Manage\_ViewStart.cshtml">
 	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 	  </Content>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="Areas\Customer\Views\CustomerOrderHistory\CustomerOrderHistory.cshtml" />
 	</ItemGroup>
 
 </Project>

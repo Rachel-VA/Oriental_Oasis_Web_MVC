@@ -171,8 +171,16 @@ namespace Oriental_Oasis_Web.Areas.Identity.Pages.Account
                     {
                         await _userManager.AddToRoleAsync(user, StaticDetails.Role_Customer);
                     }
-
-                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    //if user signed in is admin, then stay sign in when creating a new user
+                    if(User.IsInRole(StaticDetails.Role_Admin))
+                    {
+                        TempData["success"] = "New User Created sucessfully";
+                    }
+                    else
+                    {
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+                    }
+                    
                     return LocalRedirect(returnUrl);
                 }
                 foreach (var error in result.Errors)

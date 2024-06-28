@@ -42,7 +42,7 @@ This guide will walk you through the steps to set up an ASP.NET Core C# web appl
 To avoid SSL certificate warnings when running your application locally, you need to trust the HTTPS development certificate.
 
 1. In the terminal, run the following command:
-   dotnet dev-certs https --trust then restart the computer
+   .net dev-certs https --trust then restart the computer
 
 ### 4. Add Source Control from Visual Studio
 
@@ -74,34 +74,32 @@ To avoid SSL certificate warnings when running your application locally, you nee
 - Go to Database Studio and refresh it, the new name should appear in the database
 
 ### Create A Category Table
-
-- Create Db property for Category in ApplicationDbContext.cs file
-- Go to Tools - NuGet Manager Console to migrate it by enter the command ' add-migration AddCategoryTableToDb' and press enter. It will auto generate a migration folder and files in the project
-- Go to NuGet Manager Console to 'update-database' 
-- To check for update migration in database, right click dbo._EFMigrationHis and select top 1000 to see_
+- Create a Db property for Category in ApplicationDbContext.cs file.
+- Go to Tools -> NuGet Package Manager -> Package Manager Console to migrate it by entering the command add-migration AddCategoryTableToDb and press enter. It will auto-generate a migration folder and files in the project.
+- Go to NuGet Package Manager Console and run update-database.
+- To check for update migration in the database, right-click dbo._EFMigrationHistory and select top 1000 to see.
 
 ### Add Category Controller
+- Right-click on the Controllers folder -> Add -> Controller -> select an empty controller and name it CategoryController.
+- Right-click on the Views folder -> Add -> Folder -> name it Category.
+- Right-click on the Category folder -> Add -> View -> select an empty razor view. It will generate an Index.cshtml file.
 
-- Right click on controller folder - add - controller - select an empty controller and name it Category. The name must has the controller in it
-- Right click on the view folder - add - folder - name it Category (must be same name)
-- Right click on the category folder - add - view - select empty razor view. It will generate a index.cshtml file
 
 ### Add Category Link in Header
 
 - Go to Shared folder and open _Layout.cshtml and add in another nav tab and name it category
 
 ### Seed Category Table
+- Go to the Data folder -> ApplicationDbContext.cs -> open it and create code to override the default function that the model generated.
+- Open Console NuGet and run add-migration SeedCategoryTable to push the created data into the database.
+- Then run the command update-database to update the database to see changes.
+- To see the changes, go to the database, right-click on dbo.Category table.
 
-- Go to Data folder - ApplicationDbContext.cs open it and create code to override the default func that the model generated
-- Open Console NuGet to 'add-migration SeedCategoryTable' to push the created data into database
-- Then ran the command 'update-database' to update the database to see changes
-- To see the changes, go to database, right click on bdo.Category table
 
-### Category CRUD operation is almost done
 
 ### Repository Pattern for database
-- Create lib classes as new projects: OrientalOasis.DataAccess, OrientalOasis.Model, and OrientalOasis.Utilities
-- Move Data and Migration folders into .DataAccess project, move Models folder into .Model, create a new class inside .Utilities project to store static data  
+- Create class libraries as new projects: OrientalOasis.DataAccess, OrientalOasis.Model, and OrientalOasis.Utilities.
+- Move Data and Migration folders into .DataAccess project, move Models folder into .Model, create a new class inside .Utilities project to store static data.
 
 ### Reset database
 - Delete the database in SQL studio management
@@ -156,18 +154,19 @@ To avoid SSL certificate warnings when running your application locally, you nee
 - Detail Page
 
 
-### Part 3:  Features
-- Using Identity.EntityFramework for register/login
-- Ensure to install 'Microsoft.AspNetCore.Identity.EntityFrameworkCore' package for both the main project and the sub-project .DataAccess
-- Ensure the 'app.UseAuthentication();' is called before the 'app.UseAuthorization();' in program.cs
-- The framework will auto generate a new ApplicationDbContext, remove it and pass in the ItentityUser in ApplicationDbContext
-- Check all the changes after in the project after the Scaffolder Identity sucessfully configured
-- In appsettings.json, remove the new generated ApplicationDbContext server
-- Check the Area folder and delete the generated data folder. Keep the 'pages' folder. It contains all the new files (razor views) for Idenity (register, login, validations)
-- Register the Razor view pages and add in routing pipline in program.cs for the pages to be seen
+### Part 3: Identity Management Using Identity.EntityFramework
+- Ensure to install Microsoft.AspNetCore.Identity.EntityFrameworkCore package for both the main project and the sub-project .DataAccess.
+- Ensure the app.UseAuthentication(); is called before the app.UseAuthorization(); in Program.cs.
+- The framework will auto-generate a new ApplicationDbContext, remove it and pass in the IdentityUser in ApplicationDbContext.
+- Check all the changes in the project after the Scaffolder Identity successfully configured.
+- In appsettings.json, remove the newly generated ApplicationDbContext server.
+- Check the Areas folder and delete the generated Data folder. Keep the Pages folder. It contains all the new files (razor views) for Identity (register, login, validations).
+- Register the Razor view pages and add in the routing pipeline in Program.cs for the pages to be seen.
+
 #### Create identity Table
 - Open tools-NuGet management console and add migration "add-migration addIdentityTables" to create table in database to store user info
 - Run update-database
+
 #### Extend user identity (add more columns in database to store more user info)
 - Create a new class inside .Model sub-project and named it ApplicationUser
 - change it to public and inherent IdentityUser
@@ -194,8 +193,6 @@ To avoid SSL certificate warnings when running your application locally, you nee
 - Add a dropdown view in Register.cshtml to display the List role
 - Impletement  the logic to select a single role at a time in Register.cshtml.cs
 - Add in the AddDefaultTokenProviders() in program.cs
-
-
 
 ### Company CRUD operations
 - Create new controller and model for company operation
@@ -226,7 +223,21 @@ To avoid SSL certificate warnings when running your application locally, you nee
 - create Http post method for Summary and bind the view model ShoppingCartVM
 
 - 
-#### Final part: 
-- Order management
-- Styling
-- Deployment
+#### Final part: Order management
+- Create an order controller
+- Create an API call region (copied from Product controller)
+- Create an Order view model
+- Crate status order and apply filter
+- Create Order history view for customer and order management for admin
+- Handle order approved/pending/shipped status
+- Styling consistency throughout the web
+- Modify the nav bar responsive
+
+#### Deployment Procedure
+- Create Azure sql resource
+- Setup server and service for sql
+- Obtain connection string 
+- Create a appsettings.Production.json file from the main project
+- Put the connection string and the Stripe keys in the Production.json file
+- Setup the hosting plan and usages on Azure
+- Go to Solution explorer - publish- select Azure

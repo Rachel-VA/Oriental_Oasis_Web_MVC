@@ -10,10 +10,10 @@ using System.Security.Claims;
 using System.Diagnostics;
 using OrientalOasis.Utilities;
 
-namespace Oriental_Oasis_Web.Areas.Customer.Controllers
+namespace Oriental_Oasis_Web.Areas.Admmin.Controllers
 {
     //using Area attribute to specific area for the controller
-    [Area("Customer")]
+    [Area("Admin")]
     public class HomeController : Controller
     {
 
@@ -26,15 +26,6 @@ namespace Oriental_Oasis_Web.Areas.Customer.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        public IActionResult About()
-        {
-            return View();
-        }
 
         public IActionResult Index()
         {
@@ -107,7 +98,10 @@ namespace Oriental_Oasis_Web.Areas.Customer.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        
+        public IActionResult Privacy()
+        {
+            return View();
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

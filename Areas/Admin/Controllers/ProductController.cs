@@ -16,7 +16,7 @@ using OrientalOasis.Utilities;
 namespace Oriental_Oasis_Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    //[Authorize(Roles = StaticDetails.Role_Admin)]
+    [Authorize(Roles = StaticDetails.Role_Admin)]
     public class ProductController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
